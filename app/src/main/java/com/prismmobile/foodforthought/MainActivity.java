@@ -25,7 +25,14 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 count = count + 1;
-                counter.setText(Integer.toString(count));
+
+                if (count == 10) {
+                    counter.setText(getString(R.string.snarky_quote));
+                }
+                else {
+                    counter.setText(Integer.toString(count));
+                }
+
 
             }
         });
