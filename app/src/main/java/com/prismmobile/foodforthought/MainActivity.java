@@ -1,41 +1,40 @@
 package com.prismmobile.foodforthought;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
 
-    private TextView counter;
 
-    int count;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button countButton;counter = (TextView) findViewById(R.id.counter);
-        countButton = (Button) findViewById(R.id.count_button);
-        count = 0;
 
-        countButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                count = count + 1;
+        ArrayList<Place> model = new ArrayList<>();
+        model.add(new Place("Bob\'s Crab Shack",
+                            "123 Main Street, Los Angeles, CA, 90038",
+                            "Restaurant",
+                            4));
+        model.add(new Place("SturBacks Coffee",
+                            "345 Cabrillo Ave, Torrance, CA, 90501",
+                            "Coffee Shop",
+                            5));
+        model.add(new Place("DcMonald\'s Restaurant",
+                            "1500 Minimum Wage Lane, Turtles, NE",
+                            "Fast Food",
+                            3));
 
-                if (count == 10) {
-                    counter.setText(getString(R.string.snarky_quote));
-                }
-                else {
-                    counter.setText(Integer.toString(count));
-                }
 
 
-            }
-        });
+
+
+
 
     }
 
