@@ -27,6 +27,8 @@ public class FoodAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        
+
         return null;
     }
 
@@ -37,11 +39,11 @@ public class FoodAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return mList.get(position);
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return mList.size();
     }
 }

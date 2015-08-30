@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -30,10 +31,9 @@ public class MainActivity extends ActionBarActivity {
                             "Fast Food",
                             3));
 
-
-
-
-
+        ListView list = (ListView) findViewById(R.id.listView);
+        FoodAdapter adapter = new FoodAdapter(this, model);
+        list.setAdapter(adapter);
 
 
     }
