@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +29,20 @@ public class FoodAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        
+        ViewHolder holder;
 
-        return null;
+        if(convertView == null) {
+            convertView = inflater.inflate(R.layout.view_place, parent, false);
+            holder = new ViewHolder();
+            holder.title = (TextView) convertView.findViewById(R.id.place_title);
+            convertView.setTag(holder);
+        }
+        else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        holder.title.setText(mList.get(position).getName());
+        return convertView;
     }
 
     @Override
@@ -46,4 +59,10 @@ public class FoodAdapter extends BaseAdapter {
     public int getCount() {
         return mList.size();
     }
+
+
+    static class ViewHolder {
+        TextView title;
+    }
 }
+
