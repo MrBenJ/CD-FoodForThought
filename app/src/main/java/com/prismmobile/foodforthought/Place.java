@@ -8,10 +8,10 @@ public class Place {
     private String name;
     private String address;
     private String type;
-    private int icon;
+    private boolean icon;
 
 
-    Place(String name, String address, String type, int icon) {
+    Place(String name, String address, String type, boolean icon) {
         this.name = name;
         this.address = address;
         this.type = type;
@@ -42,11 +42,11 @@ public class Place {
         this.type = type;
     }
 
-    public int getIcon() {
+    public boolean getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(boolean icon) {
         this.icon = icon;
     }
 }

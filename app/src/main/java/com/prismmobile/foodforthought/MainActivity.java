@@ -21,15 +21,15 @@ public class MainActivity extends ActionBarActivity {
         model.add(new Place("Bob\'s Crab Shack",
                             "123 Main Street, Los Angeles, CA, 90038",
                             "Restaurant",
-                            4));
+                            true));
         model.add(new Place("SturBacks Coffee",
                             "345 Cabrillo Ave, Torrance, CA, 90501",
                             "Coffee Shop",
-                            5));
+                            false));
         model.add(new Place("DcMonald\'s Restaurant",
                             "1500 Minimum Wage Lane, Turtles, NE",
                             "Fast Food",
-                            3));
+                            true));
 
         ListView list = (ListView) findViewById(R.id.listView);
         FoodAdapter adapter = new FoodAdapter(this, model);
