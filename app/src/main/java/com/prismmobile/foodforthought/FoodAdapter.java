@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -33,13 +34,26 @@ public class FoodAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.view_place, parent, false);
             holder = new ViewHolder();
             holder.title = (TextView) convertView.findViewById(R.id.place_title);
+            holder.address = (TextView) convertView.findViewById(R.id.place_address);
+            holder.icon = (ImageView) convertView.findViewById(R.id.place_icon);
             convertView.setTag(holder);
+
+
         }
         else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         holder.title.setText(mList.get(position).getName());
+        holder.address.setText(mList.get(position).getAddress());
+
+        if(mList.get(position).getIcon()) {
+            holder.icon.setImageResource(R.drawable.open_icon);
+        }
+        else {
+            holder.icon.setImageResource(R.drawable.closed_icon);
+        }
+
         return convertView;
     }
 
@@ -58,6 +72,8 @@ public class FoodAdapter extends BaseAdapter {
     }
     static class ViewHolder {
         TextView title;
+        TextView address;
+        ImageView icon;
     }
 }
 
