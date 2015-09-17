@@ -2,14 +2,24 @@ package com.prismmobile.foodforthought;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
 
+    OkHttpClient okHttpClient;
+
+    private final static String TAG = MainActivity.class.getSimpleName();
 
 
     @Override
@@ -18,23 +28,47 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         ArrayList<Place> model = new ArrayList<>();
-        model.add(new Place("Bob\'s Crab Shack",
-                            "123 Main Street, Los Angeles, CA, 90038",
-                            "Restaurant",
-                            true));
-        model.add(new Place("SturBacks Coffee",
-                            "345 Cabrillo Ave, Torrance, CA, 90501",
-                            "Coffee Shop",
-                            false));
-        model.add(new Place("DcMonald\'s Restaurant",
-                            "1500 Minimum Wage Lane, Turtles, NE",
-                            "Fast Food",
-                            true));
+        okHttpClient = new OkHttpClient();
+        getPlaces();
 
         ListView list = (ListView) findViewById(R.id.listView);
         FoodAdapter adapter = new FoodAdapter(this, model);
         list.setAdapter(adapter);
 
+    }
+
+    private void getPlaces() {
+        // Get some cool places!
+
+        // TODO: Get user location
+
+        double latitude = 51.5033630;
+        double longitude = -0.1276250;
+        try {
+            Request request = new Request.Builder()
+                    .url("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=" +
+                    getString(R.string.apiKey) +
+                    "location=" +
+                    latitude + "," + longitude)
+                    .build();
+
+            okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    // SOMETHING WENT WRONG
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    // SOMETHING AWESOME HAPPENED
+                    Log.v(TAG, response.body().toString());
+                }
+            });
+
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
