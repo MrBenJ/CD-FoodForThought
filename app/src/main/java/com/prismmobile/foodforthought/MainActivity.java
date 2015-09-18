@@ -7,6 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -48,9 +51,13 @@ public class MainActivity extends ActionBarActivity {
             Request request = new Request.Builder()
                     .url("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=" +
                     getString(R.string.apiKey) +
-                    "location=" +
-                    latitude + "," + longitude)
+                    "location=" + latitude + "," + longitude +
+                    "radius=" + 500 +
+                    "type=food" +
+                    "rankby=distance") //  500 meters
                     .build();
+
+            Log.i(TAG, request.toString());
 
             okHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
@@ -61,7 +68,10 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void onResponse(Response response) throws IOException {
                     // SOMETHING AWESOME HAPPENED
-                    Log.v(TAG, response.body().toString());
+
+                    JsonParser parser = new JsonParser();
+                    JsonElement data = parser.parse(response.body().toString());
+                    Log.v(TAG, data.toString());
                 }
             });
 
