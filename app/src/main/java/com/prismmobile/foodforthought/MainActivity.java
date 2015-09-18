@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -14,6 +16,7 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,14 +26,14 @@ public class MainActivity extends ActionBarActivity {
     OkHttpClient okHttpClient;
 
     private final static String TAG = MainActivity.class.getSimpleName();
-
+    ArrayList<Place> model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ArrayList<Place> model = new ArrayList<>();
+        model = new ArrayList<>();
         okHttpClient = new OkHttpClient();
         getPlaces();
 
@@ -50,11 +53,11 @@ public class MainActivity extends ActionBarActivity {
         try {
             Request request = new Request.Builder()
                     .url("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=" +
-                    getString(R.string.apiKey) +
-                    "location=" + latitude + "," + longitude +
-                    "radius=" + 500 +
-                    "type=food" +
-                    "rankby=distance") //  500 meters
+                    getString(R.string.apiKey) + "&" +
+                    "location=" + latitude + "," + longitude + "&" +
+                    "radius=" + 500 + "&" +
+                    "type=food" + "&" +
+                    "rankBy=distance") //  500 meters
                     .build();
 
             Log.i(TAG, request.toString());
@@ -68,10 +71,40 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void onResponse(Response response) throws IOException {
                     // SOMETHING AWESOME HAPPENED
-
+                    Gson gson = new Gson();
                     JsonParser parser = new JsonParser();
-                    JsonElement data = parser.parse(response.body().toString());
-                    Log.v(TAG, data.toString());
+                    String data = response.body().string();
+                    JsonElement element = parser.parse(data);
+
+                    gson.fromJson(element, Place.class);
+
+                    if(element.isJsonObject()) {
+                        JsonArray results = element.getAsJsonObject()
+                                .get("results")
+                                .getAsJsonArray();
+
+                        for(int i = 0; i < results.size(); i++) {
+                            String name;
+                            String address;
+                            boolean icon;
+                            JsonObject place = results.get(i).getAsJsonObject();
+                            name = place.get("name").getAsString();
+                            address = place.get("vicinity").getAsString();
+                            icon = place.get("opening_hours").getAsJsonObject().get("open_now").getAsBoolean();
+                            Place item = new Place(
+                                    name,
+                                    address,
+                                    null,
+                                    false
+                            );
+
+                            model.add(item);
+                        }
+                    }
+
+
+
+
                 }
             });
 
