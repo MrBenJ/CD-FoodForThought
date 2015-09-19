@@ -11,10 +11,9 @@ public class Place {
     private boolean icon;
 
 
-    Place(String name, String address, String type, boolean icon) {
+    Place(String name, String address, boolean icon) {
         this.name = name;
         this.address = address;
-        this.type = type;
         this.icon = icon;
     }
 
@@ -32,14 +31,6 @@ public class Place {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public boolean getIcon() {

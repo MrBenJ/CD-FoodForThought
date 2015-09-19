@@ -1,6 +1,7 @@
 package com.prismmobile.foodforthought;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -16,7 +17,6 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,8 @@ public class MainActivity extends ActionBarActivity {
     OkHttpClient okHttpClient;
 
     private final static String TAG = MainActivity.class.getSimpleName();
-    ArrayList<Place> model;
+    private ArrayList<Place> model;
+    private ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +38,8 @@ public class MainActivity extends ActionBarActivity {
         okHttpClient = new OkHttpClient();
         getPlaces();
 
-        ListView list = (ListView) findViewById(R.id.listView);
-        FoodAdapter adapter = new FoodAdapter(this, model);
-        list.setAdapter(adapter);
+        list = (ListView) findViewById(R.id.listView);
+
 
     }
 
@@ -48,8 +48,9 @@ public class MainActivity extends ActionBarActivity {
 
         // TODO: Get user location
 
-        double latitude = 51.5033630;
-        double longitude = -0.1276250;
+        double latitude = 33.8303090;
+        double longitude = -118.3068440;
+
         try {
             Request request = new Request.Builder()
                     .url("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=" +
@@ -71,12 +72,12 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void onResponse(Response response) throws IOException {
                     // SOMETHING AWESOME HAPPENED
-                    Gson gson = new Gson();
+                    Handler uiThread = new Handler(getBaseContext().getMainLooper());
                     JsonParser parser = new JsonParser();
                     String data = response.body().string();
                     JsonElement element = parser.parse(data);
 
-                    gson.fromJson(element, Place.class);
+
 
                     if(element.isJsonObject()) {
                         JsonArray results = element.getAsJsonObject()
@@ -84,24 +85,39 @@ public class MainActivity extends ActionBarActivity {
                                 .getAsJsonArray();
 
                         for(int i = 0; i < results.size(); i++) {
-                            String name;
-                            String address;
-                            boolean icon;
                             JsonObject place = results.get(i).getAsJsonObject();
-                            name = place.get("name").getAsString();
-                            address = place.get("vicinity").getAsString();
-                            icon = place.get("opening_hours").getAsJsonObject().get("open_now").getAsBoolean();
+                            String name = place.get("name").getAsString();
+                            String address = place.get("vicinity").getAsString();
+                            boolean isOpen;
+
+                            if(place.has("opening_hours")) {
+                                JsonObject openHours = place.get("opening_hours").getAsJsonObject();
+                                isOpen = openHours.get("open_now").getAsBoolean();
+                            }
+                            else {
+                                isOpen = false;
+                            }
+
                             Place item = new Place(
                                     name,
                                     address,
-                                    null,
-                                    false
+                                    isOpen
                             );
 
                             model.add(item);
                         }
-                    }
 
+                        uiThread.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                buildListview();
+                            }
+                        });
+                    }
+                    else {
+                        Log.e(TAG, "=====FAILURE=====");
+                        Log.e(TAG, "element is not a JsonElement");
+                    }
 
 
 
@@ -113,6 +129,11 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
+    }
+
+    private void buildListview() {
+        FoodAdapter adapter = new FoodAdapter(this, model);
+        list.setAdapter(adapter);
     }
 
     @Override
