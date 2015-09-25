@@ -7,9 +7,7 @@ package com.prismmobile.foodforthought;
 public class Place {
     private String name;
     private String address;
-    private String type;
     private boolean icon;
-
 
     Place(String name, String address, boolean icon) {
         this.name = name;
