@@ -21,23 +21,12 @@ public class Place {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getAddress() {
         return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public boolean getIcon() {
         return icon;
     }
 
-    public void setIcon(boolean icon) {
-        this.icon = icon;
-    }
 }
