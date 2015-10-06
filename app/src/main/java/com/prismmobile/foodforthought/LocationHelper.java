@@ -13,9 +13,11 @@ import android.os.Bundle;
  */
 public class LocationHelper {
 
+    protected static LocationManager locationManager;
     private static Location currentLocation;
+
     protected static Location getLocation(Context context) {
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         LocationListener locationListener = new LocationListener() {
 
@@ -44,8 +46,13 @@ public class LocationHelper {
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
+        if(currentLocation == null) {
+            return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
         return currentLocation;
     }
+
+
 
     protected static boolean isNewerLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
