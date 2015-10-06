@@ -1,5 +1,8 @@
 package com.prismmobile.foodforthought;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -27,6 +30,7 @@ public class MainActivity extends ActionBarActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
     private ArrayList<Place> model;
     private ListView list;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,7 @@ public class MainActivity extends ActionBarActivity {
         getPlaces();
 
         list = (ListView) findViewById(R.id.listView);
-
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
     }
 
@@ -46,7 +50,11 @@ public class MainActivity extends ActionBarActivity {
         // Get some cool places!
 
         // TODO: Get user location
+        Location location = LocationHelper.getLocation(this);
 
+        if(location != null) {
+            Log.i(TAG, "Location!");
+        }
         double latitude = 33.8303090;
         double longitude = -118.3068440;
 
@@ -66,6 +74,7 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void onFailure(Request request, IOException e) {
                     // SOMETHING WENT WRONG
+                    // TODO: Insert AlertDialog here!
                 }
 
                 @Override
