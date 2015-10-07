@@ -1,9 +1,6 @@
 package com.prismmobile.foodforthought;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
